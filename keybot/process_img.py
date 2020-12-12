@@ -1,5 +1,4 @@
 import cv2, sys, os, shutil, json
-from tqdm import tqdm
 
 src_dir, des_dir = sys.argv[1:]
 print("compile picture: src = " + src_dir + ", des_dir = " + des_dir)
@@ -9,14 +8,15 @@ os.makedirs(des_dir)
 
 answer_map = []
 
-for name in tqdm(os.listdir(src_dir)):
+for name in os.listdir(src_dir):
     input_file = os.path.join(src_dir, name)
     img = cv2.imread(input_file)
+    img[0, 0] = (0, 0, 3)
     # add some noise
-    strip = 10
-    height = 1
-    offset = 1
-    color = 0
+#     strip = 10
+#     height = 1
+#     offset = 1
+#     color = 0
 #     for h in range((img.shape[0]) // (strip + height)):
 #         y1 = (strip + height) * h + offset
 #         y2 = y1 + height
@@ -27,7 +27,7 @@ for name in tqdm(os.listdir(src_dir)):
 #         # img[y1:y2, 0:img.shape[1]-1] = (0, 0, 0)
 #         img[0:img.shape[0]-1, y1:y2] = (color, color, color)
 
-    new_name = name.replace(".png", ".bmp")
+    new_name = name.replace(".png", ".jpg")
     new_name, answer = new_name.split(" ", 1)
     extension = answer[-4:]
     answer = answer[:-4]

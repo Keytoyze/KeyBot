@@ -9,5 +9,5 @@ import java.io.File
 suspend fun File.uploadImageSafely(master: Contact, messageEvent: MessageEvent): Image {
     val externalImage = toExternalImage()
     master.sendMessage(master.uploadImage(externalImage))
-    return messageEvent.sender.uploadImage(externalImage)
+    return messageEvent.subject.uploadImage(externalImage)
 }

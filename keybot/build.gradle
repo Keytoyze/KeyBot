@@ -40,12 +40,21 @@ tasks.withType(Jar.class) { jarTask ->
 }
 
 task processImage(type: Exec) { task ->
-    workingDir task.project.projectDir
-    def python_name = 'python3'
-    if ('python --version'.execute().text.contains("Python 3")) {
-        python_name = "python"
+
+    def out = new ByteArrayOutputStream()
+    exec {
+        commandLine 'python',  '--version'
+        errorOutput = out
     }
-    commandLine python_name, 'process_img.py',
+    def pythonName = 'python'
+    def pythonVersionTestResult = out.toString().trim()
+    println("Python version test: " + pythonVersionTestResult)
+    if (pythonVersionTestResult.contains("Python 2")) {
+        pythonName = "python3"
+    }
+
+    workingDir task.project.projectDir
+    commandLine pythonName, 'process_img.py',
             Path.of(task.project.rootDir.path, repositoryPath, 'problem-set'),
             Path.of(task.project.buildDir.path, 'libs', 'repository')
 }

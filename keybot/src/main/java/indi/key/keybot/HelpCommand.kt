@@ -15,11 +15,11 @@ object HelpCommand : BaseCommand() {
         arguments: String
     ) {
         messageEvent.subject.sendMessage(
-            PlainText("帮助：\n") +
+            PlainText("指令大全：\n") +
                     COMMANDS.map {
-                        it.toStringNoQuotes()
+                        "【${it.toStringNoQuotes()}】${it.help}"
                     }
-                        .joinToString("\n") + "\n直接输入消息就能召唤我了哦！"
+                        .joinToString("\n") + "\n直接输入感叹号+指令，就能召唤我了哦！"
         )
     }
 }

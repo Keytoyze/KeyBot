@@ -20,8 +20,10 @@ object RequestCommand : BaseCommand() {
         arguments: String
     ) {
         if (environment.currentQuestion != null) {
-            environment.getCurrentQuestionFile().uploadImageSafely(master, messageEvent).sendTo(messageEvent.subject)
-            (PlainText("上一题还没回答哦！题目见上。\n若想放弃此题直接查看答案，请发送指令：$SkipCommand")).sendTo(messageEvent.subject)
+            messageEvent.subject.sendMessage(
+                environment.getCurrentQuestionFile().uploadImageSafely(master, messageEvent) +
+                        PlainText("上一题还没回答哦！题目见上。\n若想放弃此题直接查看答案，请发送指令：$SkipCommand")
+            )
             return
         }
         if (environment.visitedQuestion == null) {
@@ -38,9 +40,9 @@ object RequestCommand : BaseCommand() {
         val currentQuestion = totalQuestions.random()
         environment.currentQuestion = currentQuestion
 
-        val file = environment.getCurrentQuestionFile()
-        val image = file.uploadImageSafely(master, messageEvent)
-        image.sendTo(messageEvent.subject)
-        PlainText("做出题目后，请发送指令：${AnswerCommand}。回答正确可以得一分！").sendTo(messageEvent.subject)
+        messageEvent.subject.sendMessage(
+            environment.getCurrentQuestionFile().uploadImageSafely(master, messageEvent) +
+                    PlainText("做出题目后，请发送指令：${AnswerCommand}。第一个回答正确者可以得一分！")
+        )
     }
 }

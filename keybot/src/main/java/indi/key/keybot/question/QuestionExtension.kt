@@ -16,7 +16,7 @@ internal fun Environment.toRankingList() = rankingList.entries
     .mapIndexed { index, mutableEntry ->
         "No.${index + 1} ${mutableEntry.value.first}: ${
             String.format(
-                "%.1lf",
+                "%.1f",
                 mutableEntry.value.second
             )
         } 分"
