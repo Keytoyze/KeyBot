@@ -46,7 +46,4 @@ keys.properties
 # os settings
 .DS_Store
 
-# project settings
-/repository
-/secret
 
