@@ -20,16 +20,11 @@ try {
     def keyProps = new Properties()
     def keyFile = file("local.properties")
     if (keyFile.exists()) keyFile.withInputStream { keyProps.load(it) }
-    if (!keyProps.getProperty("sdk.dir", "").isEmpty()) {
-        project.ext.set("isAndroidSDKAvailable", true)
-    } else {
-        project.ext.set("isAndroidSDKAvailable", false)
-    }
 } catch (Exception ignored) {
 }
 
 allprojects {
-    group = "net.mamoe"
+    group = "indi.key"
 
     repositories {
         mavenLocal()

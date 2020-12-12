@@ -33,39 +33,27 @@ tasks.withType(Jar.class) { jarTask ->
     }
 
     jarTask.project.copy {
-        from Path.of(jarTask.project.rootDir.path, 'secret')
+        from Path.of(jarTask.project.rootDir.path, repositoryPath, 'user.json')
+        from Path.of(jarTask.project.rootDir.path, repositoryPath, 'device.json')
         into Path.of(jarTask.project.buildDir.path, 'libs')
     }
 }
 
 task processImage(type: Exec) { task ->
     workingDir task.project.projectDir
-    commandLine 'python', 'process_img.py',
-            Path.of(task.project.rootDir.path, 'repository'),
+    def python_name = 'python3'
+    if ('python --version'.execute().text.contains("Python 3")) {
+        python_name = "python"
+    }
+    commandLine python_name, 'process_img.py',
+            Path.of(task.project.rootDir.path, repositoryPath, 'problem-set'),
             Path.of(task.project.buildDir.path, 'libs', 'repository')
 }
 
 task runBot(type: Exec) { task ->
     workingDir Path.of(task.project.buildDir.path, 'libs')
-    commandLine 'java', '-jar', 'mirai-demo-kotlin.jar'
+    commandLine 'java', '-jar', 'keybot.jar'
 }
 
 runBot.dependsOn jar
 jar.dependsOn processImage
-
-//task run(ty) {
-//    dependsOn("jar")
-//    comman
-//}
-
-//tasks.named("build", Jar) {
-//    it.manifest {
-//        attributes 'Main-Class': "demo.subscribe.SubscribeSamplesKt"
-//    }
-//    // Add this
-//    it.from {
-//        configurations.compile.collect {
-//            it.isDirectory() ? it : zipTree(it)
-//        }
-//    }
-//}
