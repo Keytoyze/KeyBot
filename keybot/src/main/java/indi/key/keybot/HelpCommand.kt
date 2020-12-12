@@ -14,8 +14,8 @@ object HelpCommand : BaseCommand() {
         environment: Environment,
         arguments: String
     ) {
-        messageEvent.subject.sendMessage(
-            PlainText("指令大全：\n") +
+        messageEvent.subject.sendMessageSafely(environment,
+            "指令大全：\n" +
                     COMMANDS.map {
                         "【${it.toStringNoQuotes()}】${it.help}"
                     }

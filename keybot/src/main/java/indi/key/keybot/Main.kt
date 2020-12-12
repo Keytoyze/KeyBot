@@ -102,7 +102,7 @@ suspend fun main() {
                 !this.message.contentToString().startsWith("！") &&
                 this.sender.id != userInfo.qq
             ) {
-//                process(ResponseFromLearnCommand, this, master, this.message.contentToString())
+                process(ResponseFromLearnCommand, this, master, this.message.contentToString())
             }
         }
     }

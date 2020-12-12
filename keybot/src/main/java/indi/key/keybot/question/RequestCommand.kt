@@ -2,6 +2,7 @@ package indi.key.keybot.question
 
 import indi.key.keybot.BaseCommand
 import indi.key.keybot.Environment
+import indi.key.keybot.sendMessageSafely
 import indi.key.keybot.uploadImageSafely
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.message.MessageEvent
@@ -19,7 +20,7 @@ object RequestCommand : BaseCommand() {
         arguments: String
     ) {
         if (environment.currentQuestion != null) {
-            messageEvent.subject.sendMessage(
+            messageEvent.subject.sendMessageSafely(environment,
                 environment.getCurrentQuestionFile().uploadImageSafely(master, messageEvent) +
                         PlainText("上一题还没回答哦！题目见上。\n若想放弃此题直接查看答案，请发送指令：$SkipCommand")
             )
@@ -30,7 +31,7 @@ object RequestCommand : BaseCommand() {
         }
         val totalQuestions = Environment.answer.keys.toMutableSet()
         if (totalQuestions.size <= environment.visitedQuestion!!.size) {
-            messageEvent.subject.sendMessage("题库已经做光啦！稍等片刻，船新题目马上奉上！")
+            messageEvent.subject.sendMessageSafely(environment, "题库已经做光啦！稍等片刻，船新题目马上奉上！")
             return
         }
 
@@ -39,7 +40,7 @@ object RequestCommand : BaseCommand() {
         val currentQuestion = totalQuestions.random()
         environment.currentQuestion = currentQuestion
 
-        messageEvent.subject.sendMessage(
+        messageEvent.subject.sendMessageSafely(environment,
             environment.getCurrentQuestionFile().uploadImageSafely(master, messageEvent) +
                     PlainText("做出题目后，请发送指令：${AnswerCommand}。第一个回答正确者可以得一分！")
         )

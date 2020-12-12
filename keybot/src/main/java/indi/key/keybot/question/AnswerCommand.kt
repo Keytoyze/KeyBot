@@ -2,6 +2,7 @@ package indi.key.keybot.question
 
 import indi.key.keybot.BaseCommand
 import indi.key.keybot.Environment
+import indi.key.keybot.sendMessageSafely
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.PlainText
@@ -49,7 +50,7 @@ object AnswerCommand : BaseCommand() {
         val name = messageEvent.sender.nick
         if (correct) {
             environment.incrementQuestionScore(id, name, 1.0)
-            messageEvent.subject.sendMessage(
+            messageEvent.subject.sendMessageSafely(environment,
                 PlainText("回答正确，恭喜") + Environment.constructAt(messageEvent.sender)
                         + PlainText("得一分！\n发送指令：${RequestCommand}，即可再做一道题目～\n\n当前排行榜：\n${environment.toRankingList()}")
             )
@@ -62,7 +63,7 @@ object AnswerCommand : BaseCommand() {
         } else {
             environment.incrementQuestionScore(id, name, -0.3)
             environment.currentErrorCount = (environment.currentErrorCount ?: 0) + 1
-            messageEvent.subject.sendMessage(
+            messageEvent.subject.sendMessageSafely(environment,
                 Environment.constructAt(messageEvent.sender)
                         + "回答错误，扣0.3分 TAT 再想想呢～\n若想放弃此题直接查看答案，请发送指令：$SkipCommand"
             )

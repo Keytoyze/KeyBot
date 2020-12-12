@@ -4,6 +4,7 @@ import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.Image
 import net.mamoe.mirai.message.data.Message
+import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.toExternalImage
 import java.io.File
 import kotlin.math.min
@@ -16,8 +17,8 @@ suspend fun File.uploadImageSafely(master: Contact, messageEvent: MessageEvent):
 
 suspend fun Contact.sendMessageSafely(environment: Environment, message: Message) {
     val lastSendTime = environment.lastSendTime ?: 0
-    val abandonInterval = environment.abandonInterval ?: 0.2
-    val dangerInterval = 3.0
+    val abandonInterval = environment.abandonInterval ?: 200
+    val dangerInterval = 3000
     val currentTime = System.currentTimeMillis()
 
     if (currentTime < lastSendTime + abandonInterval) {
@@ -33,4 +34,8 @@ suspend fun Contact.sendMessageSafely(environment: Environment, message: Message
         environment.abandonInterval = null
     }
     environment.lastSendTime = currentTime
+}
+
+suspend fun Contact.sendMessageSafely(environment: Environment, message: String) {
+    sendMessageSafely(environment, PlainText(message))
 }

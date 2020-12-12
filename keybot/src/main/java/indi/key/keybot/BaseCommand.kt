@@ -14,7 +14,7 @@ abstract class BaseCommand {
     open val postFixHelp: String = ""
     abstract suspend fun process(messageEvent: MessageEvent, master: Group, environment: Environment, arguments: String)
 
-    override fun toString() = "“${toStringNoQuotes()}”"
+    override fun toString() = "【${toStringNoQuotes()}】"
 
     fun toStringNoQuotes() = "！$command" + (if (postFixHelp.isEmpty()) {
         ""
@@ -27,8 +27,8 @@ val COMMANDS = listOf(
     RequestCommand,
     AnswerCommand,
     SkipCommand,
-//    LearnCommand,
-//    ForgetCommand,
+    LearnCommand,
+    ForgetCommand,
     HelpCommand,
     PingCommand
 )

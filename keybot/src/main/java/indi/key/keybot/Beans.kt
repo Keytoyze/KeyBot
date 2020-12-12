@@ -16,7 +16,10 @@ data class Environment(
     var visitedQuestion: MutableList<String>? = arrayListOf(),
     var currentErrorCount: Int? = 0,
 
-    var learnMap: HashMap<String, String>? = hashMapOf()
+    var learnMap: HashMap<String, String>? = hashMapOf(),
+
+    var lastSendTime: Long? = null,
+    var abandonInterval: Long? = null
 ) {
 
     companion object {

@@ -2,6 +2,7 @@ package indi.key.keybot.learn
 
 import indi.key.keybot.BaseCommand
 import indi.key.keybot.Environment
+import indi.key.keybot.sendMessageSafely
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.message.MessageEvent
 
@@ -17,7 +18,7 @@ object LearnCommand : BaseCommand() {
         arguments: String
     ) {
         if (!arguments.contains(" ")) {
-            messageEvent.subject.sendMessage("格式错误：用法：【！学习 [关键词] [要我说的话]】。不要忘记加空格了哦！")
+            messageEvent.subject.sendMessageSafely(environment, "格式错误：用法：【！学习 [关键词] [要我说的话]】。不要忘记加空格了哦！")
             return
         }
         val elements = arguments.split(" ", limit = 2)
@@ -27,7 +28,7 @@ object LearnCommand : BaseCommand() {
             environment.learnMap = hashMapOf()
         }
         environment.learnMap!![keyword] = value
-        messageEvent.subject.sendMessage("学习成功！对我说 $keyword 试试吧！")
+        messageEvent.subject.sendMessageSafely(environment, "学习成功！对我说 $keyword 试试吧！")
     }
 }
 
@@ -46,10 +47,10 @@ object ForgetCommand : BaseCommand() {
             environment.learnMap = hashMapOf()
         }
         if (arguments !in environment.learnMap!!) {
-            messageEvent.subject.sendMessage("咦？我好像还没学会这个关键词呢～快对我用指令【${LearnCommand}】试试吧！")
+            messageEvent.subject.sendMessageSafely(environment, "咦？我好像还没学会这个关键词呢～快对我用指令${LearnCommand}试试吧！")
         } else {
             environment.learnMap!!.remove(arguments)
-            messageEvent.subject.sendMessage("我已经忘记啦！")
+            messageEvent.subject.sendMessageSafely(environment, "我已经忘记啦！")
         }
     }
 }
@@ -74,7 +75,7 @@ object ResponseFromLearnCommand : BaseCommand() {
         if (!content.isNullOrEmpty()) {
             content.random()
                 .let { response ->
-                    messageEvent.subject.sendMessage(response)
+                    messageEvent.subject.sendMessageSafely(environment, response)
                 }
         }
     }

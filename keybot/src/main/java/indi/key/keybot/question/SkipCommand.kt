@@ -2,6 +2,7 @@ package indi.key.keybot.question
 
 import indi.key.keybot.BaseCommand
 import indi.key.keybot.Environment
+import indi.key.keybot.sendMessageSafely
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.PlainText
@@ -20,14 +21,15 @@ object SkipCommand : BaseCommand() {
         environment.checkQuestion(messageEvent)?.let { answer ->
             if (environment.currentErrorCount ?: 0 >= 3) {
                 environment.currentQuestion = null
-                messageEvent.subject.sendMessage(
+                messageEvent.subject.sendMessageSafely(environment,
                     PlainText(
                         "题目答案：${answer.text}。很遗憾，没有人回答出来。再接再厉哦！\n" +
                                 "发送指令：${RequestCommand}，即可再做一道题目～\n\n当前排行榜：\n${environment.toRankingList()}"
                     )
                 )
             } else {
-                messageEvent.subject.sendMessage("回答错误三次以后才可以查看答案！继续加油哦！")
+                messageEvent.subject.sendMessageSafely(environment,
+                    "回答错误三次以后才可以查看答案！继续加油哦！")
             }
         }
     }

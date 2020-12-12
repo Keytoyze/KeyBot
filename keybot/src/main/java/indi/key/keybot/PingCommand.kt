@@ -13,7 +13,7 @@ object PingCommand : BaseCommand() {
         environment: Environment,
         arguments: String
     ) {
-        messageEvent.subject.sendMessage(
+        messageEvent.subject.sendMessageSafely(environment,
             Environment.constructAt(messageEvent.sender) +
             " pong!"
         )
