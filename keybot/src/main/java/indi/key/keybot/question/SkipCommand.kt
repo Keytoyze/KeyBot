@@ -18,13 +18,17 @@ object SkipCommand : BaseCommand() {
         arguments: String
     ) {
         environment.checkQuestion(messageEvent)?.let { answer ->
-            environment.currentQuestion = null
-            messageEvent.subject.sendMessage(
-                PlainText(
-                    "题目答案：${answer.text}。很遗憾，没有人回答出来。再接再厉哦！\n" +
-                            "发送指令：${RequestCommand}，即可再做一道题目～\n\n当前排行榜：\n${environment.toRankingList()}"
+            if (environment.currentErrorCount ?: 0 >= 3) {
+                environment.currentQuestion = null
+                messageEvent.subject.sendMessage(
+                    PlainText(
+                        "题目答案：${answer.text}。很遗憾，没有人回答出来。再接再厉哦！\n" +
+                                "发送指令：${RequestCommand}，即可再做一道题目～\n\n当前排行榜：\n${environment.toRankingList()}"
+                    )
                 )
-            )
+            } else {
+                messageEvent.subject.sendMessage("回答错误三次以后才可以查看答案！继续加油哦！")
+            }
         }
     }
 }

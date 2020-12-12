@@ -6,7 +6,6 @@ import indi.key.keybot.uploadImageSafely
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.PlainText
-import net.mamoe.mirai.message.data.sendTo
 
 object RequestCommand : BaseCommand() {
 

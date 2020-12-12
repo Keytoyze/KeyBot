@@ -13,7 +13,8 @@ import java.io.File
 data class Environment(
     var currentQuestion: String? = null,
     var rankingList: HashMap<Long, Pair<String, Double>> = hashMapOf(),
-    var visitedQuestion: MutableList<String>? = arrayListOf()
+    var visitedQuestion: MutableList<String>? = arrayListOf(),
+    var currentErrorCount: Int? = 0
 ) {
 
     companion object {

@@ -25,6 +25,7 @@ val COMMANDS = listOf(
     RequestCommand,
     AnswerCommand,
     SkipCommand,
-    HelpCommand
+    HelpCommand,
+    PingCommand
 )
 

@@ -57,8 +57,10 @@ object AnswerCommand : BaseCommand() {
             }
             environment.visitedQuestion!!.add(environment.currentQuestion!!)
             environment.currentQuestion = null
+            environment.currentErrorCount = 0
         } else {
             environment.incrementQuestionScore(id, name, -0.3)
+            environment.currentErrorCount = (environment.currentErrorCount ?: 0) + 1
             messageEvent.subject.sendMessage(
                 Environment.constructAt(messageEvent.sender)
                         + "回答错误，扣0.3分 TAT 再想想呢～\n若想放弃此题直接查看答案，请发送指令：$SkipCommand"
