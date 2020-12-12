@@ -1,0 +1,71 @@
+import java.util.function.Consumer
+import java.nio.file.Path
+
+plugins {
+    id 'kotlin'
+}
+
+dependencies {
+    compile "net.mamoe:mirai-core:$miraiCoreVersion"
+    compile "net.mamoe:mirai-core-qqandroid:$miraiCoreVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "com.google.code.gson:gson:$gsonVersion"
+}
+
+tasks.withType(Jar.class) { jarTask ->
+    println("buildDir: " + jarTask.project.buildDir)
+    println("rootDir: " + jarTask.project.rootDir)
+    println("projectDir: " + jarTask.project.projectDir)
+    println("temporaryDir: " + jarTask.temporaryDir)
+    jarTask.manifest {
+        attributes 'Main-Class': "indi.key.keybot.MainKt"
+    }
+    // Add this
+    jarTask.from({
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }) {
+        exclude 'META-INF/MANIFEST.MF'
+        exclude 'META-INF/*.SF'
+        exclude 'META-INF/*.DSA'
+        exclude 'META-INF/*.RSA'
+    }
+
+    jarTask.project.copy {
+        from Path.of(jarTask.project.rootDir.path, 'secret')
+        into Path.of(jarTask.project.buildDir.path, 'libs')
+    }
+}
+
+task processImage(type: Exec) { task ->
+    workingDir task.project.projectDir
+    commandLine 'python', 'process_img.py',
+            Path.of(task.project.rootDir.path, 'repository'),
+            Path.of(task.project.buildDir.path, 'libs', 'repository')
+}
+
+task runBot(type: Exec) { task ->
+    workingDir Path.of(task.project.buildDir.path, 'libs')
+    commandLine 'java', '-jar', 'mirai-demo-kotlin.jar'
+}
+
+runBot.dependsOn jar
+jar.dependsOn processImage
+
+//task run(ty) {
+//    dependsOn("jar")
+//    comman
+//}
+
+//tasks.named("build", Jar) {
+//    it.manifest {
+//        attributes 'Main-Class': "demo.subscribe.SubscribeSamplesKt"
+//    }
+//    // Add this
+//    it.from {
+//        configurations.compile.collect {
+//            it.isDirectory() ? it : zipTree(it)
+//        }
+//    }
+//}
