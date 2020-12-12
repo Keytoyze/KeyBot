@@ -1,0 +1,3 @@
+[submodule "KeyBot-repository"]
+	path = KeyBot-repository
+	url = git@github.com:Keytoyze/KeyBot-repository.git
