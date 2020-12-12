@@ -5,7 +5,7 @@ import net.mamoe.mirai.message.MessageEvent
 
 object PingCommand : BaseCommand() {
     override val command: String = "ping"
-    override val help: String = "pong"
+    override val help: String = "pong！"
 
     override suspend fun process(
         messageEvent: MessageEvent,

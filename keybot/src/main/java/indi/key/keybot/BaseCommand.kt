@@ -1,5 +1,7 @@
 package indi.key.keybot
 
+import indi.key.keybot.learn.ForgetCommand
+import indi.key.keybot.learn.LearnCommand
 import indi.key.keybot.question.AnswerCommand
 import indi.key.keybot.question.RequestCommand
 import indi.key.keybot.question.SkipCommand
@@ -25,6 +27,8 @@ val COMMANDS = listOf(
     RequestCommand,
     AnswerCommand,
     SkipCommand,
+//    LearnCommand,
+//    ForgetCommand,
     HelpCommand,
     PingCommand
 )

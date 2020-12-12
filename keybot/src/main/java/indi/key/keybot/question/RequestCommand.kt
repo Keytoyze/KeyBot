@@ -10,7 +10,7 @@ import net.mamoe.mirai.message.data.PlainText
 object RequestCommand : BaseCommand() {
 
     override val command = "做题"
-    override val help = "随机出一道选择题或填空题"
+    override val help = "来做一道紧张刺激的高考题目"
 
     override suspend fun process(
         messageEvent: MessageEvent,

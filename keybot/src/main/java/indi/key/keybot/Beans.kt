@@ -14,7 +14,9 @@ data class Environment(
     var currentQuestion: String? = null,
     var rankingList: HashMap<Long, Pair<String, Double>> = hashMapOf(),
     var visitedQuestion: MutableList<String>? = arrayListOf(),
-    var currentErrorCount: Int? = 0
+    var currentErrorCount: Int? = 0,
+
+    var learnMap: HashMap<String, String>? = hashMapOf()
 ) {
 
     companion object {

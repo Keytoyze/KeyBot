@@ -10,7 +10,7 @@ import kotlin.math.abs
 object AnswerCommand : BaseCommand() {
 
     override val command = "回答"
-    override val postFixHelp = "答案"
+    override val postFixHelp = "[答案]"
     override val help = "回答机器人出的题目。注意不要随便乱答哦！也不要通过搜题来投机取巧~"
 
     override suspend fun process(
@@ -20,9 +20,10 @@ object AnswerCommand : BaseCommand() {
         arguments: String
     ) {
         val answer = environment.checkQuestion(messageEvent) ?: return
+        println(arguments)
         val correct = when (answer.type) {
             "fraction" -> {
-                abs(arguments.toDoubleOrNull() ?: Double.NaN - answer.double!!) < 1e-7
+                abs((arguments.toDoubleOrNull() ?: Double.NaN) - answer.double!!) < 1e-7
                         || compareList(
                     arguments,
                     answer.list!!,
@@ -30,7 +31,7 @@ object AnswerCommand : BaseCommand() {
                 )
             }
             "double" -> {
-                abs(arguments.toDoubleOrNull() ?: Double.NaN - answer.double!!) < 1e-7
+                abs((arguments.toDoubleOrNull() ?: Double.NaN) - answer.double!!) < 1e-7
             }
             "or" -> {
                 compareList(
@@ -52,7 +53,7 @@ object AnswerCommand : BaseCommand() {
                 PlainText("回答正确，恭喜") + Environment.constructAt(messageEvent.sender)
                         + PlainText("得一分！\n发送指令：${RequestCommand}，即可再做一道题目～\n\n当前排行榜：\n${environment.toRankingList()}")
             )
-            if (environment.visitedQuestion != null) {
+            if (environment.visitedQuestion == null) {
                 environment.visitedQuestion = arrayListOf()
             }
             environment.visitedQuestion!!.add(environment.currentQuestion!!)

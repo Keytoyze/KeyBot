@@ -2,6 +2,7 @@ package indi.key.keybot
 
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import indi.key.keybot.learn.ResponseFromLearnCommand
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import net.mamoe.mirai.Bot
@@ -68,7 +69,7 @@ suspend fun main() {
     println("[master] $master")
 
     COMMANDS.forEach { command ->
-        val regex = Regex("\\s*(!|！)\\s*${command.command}\\s*(.*)\\s*")
+        val regex = Regex("(!|！)\\s*${command.command}\\s*(.*)\\s*")
         bot.subscribeFriendMessages {
             regex matching { content ->
                 val arguments = regex.matchEntire(content)!!.groupValues[2]
@@ -95,7 +96,15 @@ suspend fun main() {
             println("[sender] ${sender}")
             println("[message] (${message.javaClass.name}) $message")
         }
-    }
 
+        always {
+            if (!this.message.contentToString().startsWith("!") &&
+                !this.message.contentToString().startsWith("！") &&
+                this.sender.id != userInfo.qq
+            ) {
+//                process(ResponseFromLearnCommand, this, master, this.message.contentToString())
+            }
+        }
+    }
     bot.join()
 }
