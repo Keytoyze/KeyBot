@@ -1,7 +1,6 @@
 package indi.key.keybot
 
 import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
 import indi.key.keybot.learn.ResponseFromLearnCommand
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -16,7 +15,6 @@ import net.mamoe.mirai.join
 import net.mamoe.mirai.message.MessageEvent
 import java.io.File
 import java.util.*
-import kotlin.collections.HashMap
 
 val locks = Hashtable<Long, Mutex>()
 
@@ -38,23 +36,34 @@ fun getFile(subject: Contact): File {
 
 @Suppress("UNCHECKED_CAST")
 suspend fun process(command: BaseCommand, messageEvent: MessageEvent, master: Group, arguments: String) {
-    getLock(messageEvent.subject).withLock {
-        val file = getFile(messageEvent.subject)
-        // load data
-        val environment = if (!file.exists()) {
-            Environment()
-        } else {
-            Gson().fromJson(file.readText(), Environment::class.java) as Environment
+    if (command.willUseEnvironment) {
+        getLock(messageEvent.subject).withLock {
+            realProcess(command, messageEvent, master, arguments)
         }
+    } else {
+        realProcess(command, messageEvent, master, arguments)
+    }
+}
 
-        command.process(messageEvent, master, environment, arguments.trim())
+suspend fun realProcess(command: BaseCommand, messageEvent: MessageEvent, master: Group, arguments: String) {
+    val file = getFile(messageEvent.subject)
+    // load data
+    val environment = if (!file.exists() || !command.willUseEnvironment) {
+        Environment()
+    } else {
+        Gson().fromJson(file.readText(), Environment::class.java) as Environment
+    }
 
-        // store data
+    command.process(messageEvent, master, environment, arguments.trim())
+
+    // store data if command will change environment
+    if (command.willUseEnvironment) {
         file.writeText(Gson().toJson(environment))
     }
 }
 
 suspend fun main() {
+    initEnvironment()
 
     val userInfo = Environment.userInfo
 
@@ -95,6 +104,7 @@ suspend fun main() {
             println("[subject] ${subject}")
             println("[sender] ${sender}")
             println("[message] (${message.javaClass.name}) $message")
+            println("[messageContent] (${message.javaClass.name}) ${message.contentToString()}")
         }
 
         always {
@@ -107,4 +117,16 @@ suspend fun main() {
         }
     }
     bot.join()
+}
+
+private fun initEnvironment() {
+    Environment.userInfo = Gson().fromJson(File("user.json").readText(), UserInfo::class.java)
+    val raw = Gson().fromJson(
+        File("repository", "answer.json").readText(), Array<AnswerEntity>::class.java
+    ) as Array<AnswerEntity>
+    Environment.answer = hashMapOf<String, AnswerEntity>().apply {
+        raw.forEach {
+            this[it.file] = it
+        }
+    }
 }

@@ -23,19 +23,9 @@ data class Environment(
 ) {
 
     companion object {
-        val answer: Map<String, AnswerEntity> by lazy {
-            val raw = Gson().fromJson(
-                File("repository", "answer.json").readText(), Array<AnswerEntity>::class.java
-            ) as Array<AnswerEntity>
-            hashMapOf<String, AnswerEntity>().apply {
-                raw.forEach {
-                    this[it.file] = it
-                }
-            }
-        }
+        lateinit var answer: Map<String, AnswerEntity>
 
-        val userInfo: UserInfo
-            get() = Gson().fromJson(File("user.json").readText(), UserInfo::class.java)
+        lateinit var userInfo: UserInfo
 
         fun constructAt(user: User): MessageContent {
             return if (user is Member) {
@@ -53,7 +43,9 @@ data class UserInfo(
     @SerializedName("password")
     val password: String,
     @SerializedName("master_group")
-    val masterGroup: Long
+    val masterGroup: Long,
+    @SerializedName("wolframalpha_appid")
+    val wolframAlphaAppId: String
 )
 
 data class AnswerEntity(

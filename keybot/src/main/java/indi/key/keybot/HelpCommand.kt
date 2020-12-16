@@ -2,7 +2,6 @@ package indi.key.keybot
 
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.message.MessageEvent
-import net.mamoe.mirai.message.data.PlainText
 
 object HelpCommand : BaseCommand() {
     override val command: String = "帮助"
@@ -16,7 +15,7 @@ object HelpCommand : BaseCommand() {
     ) {
         messageEvent.subject.sendMessageSafely(environment,
             "指令大全：\n" +
-                    COMMANDS.map {
+                    COMMANDS.filter { it.showHelp }.map {
                         "【${it.toStringNoQuotes()}】${it.help}"
                     }
                         .joinToString("\n") + "\n直接输入感叹号+指令，就能召唤我了哦！"

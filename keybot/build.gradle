@@ -10,6 +10,7 @@ dependencies {
     compile "net.mamoe:mirai-core-qqandroid:$miraiCoreVersion"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "com.google.code.gson:gson:$gsonVersion"
+    compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
 }
 
 tasks.withType(Jar.class) { jarTask ->

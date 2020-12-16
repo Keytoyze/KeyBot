@@ -57,11 +57,12 @@ object ForgetCommand : BaseCommand() {
 
 object ResponseFromLearnCommand : BaseCommand() {
     override val command: String
-        get() = error("not used")
+        get() = ""
     override val help: String
-        get() = error("not used")
+        get() = ""
     override val postFixHelp: String
-        get() = error("not used")
+        get() = ""
+    override val showHelp: Boolean = false
 
     override suspend fun process(
         messageEvent: MessageEvent,
