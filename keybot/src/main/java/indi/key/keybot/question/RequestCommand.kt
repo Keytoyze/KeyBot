@@ -2,8 +2,8 @@ package indi.key.keybot.question
 
 import indi.key.keybot.BaseCommand
 import indi.key.keybot.Environment
-import indi.key.keybot.sendMessageSafely
-import indi.key.keybot.uploadImageSafely
+import indi.key.keybot.util.sendMessageSafely
+import indi.key.keybot.util.uploadImageSafely
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.data.PlainText

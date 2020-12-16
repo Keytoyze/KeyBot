@@ -1,6 +1,7 @@
 package indi.key.keybot
 
 import com.google.gson.Gson
+import indi.key.keybot.learn.ChatRecorder
 import indi.key.keybot.learn.ResponseFromLearnCommand
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -115,7 +116,12 @@ suspend fun main() {
                 process(ResponseFromLearnCommand, this, master, this.message.contentToString())
             }
         }
+
+        always {
+            ChatRecorder.save(message, subject, sender.id)
+        }
     }
+
     bot.join()
 }
 

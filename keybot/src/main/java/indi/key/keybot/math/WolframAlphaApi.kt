@@ -1,9 +1,11 @@
 package indi.key.keybot.math
 
 import indi.key.keybot.Environment
+import indi.key.keybot.util.sendAndRecord
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.mamoe.mirai.contact.Contact
+import net.mamoe.mirai.message.data.PlainText
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import org.w3c.dom.Document
@@ -35,12 +37,12 @@ object WolframAlphaApi {
                             .newDocumentBuilder()
                             .parse(inputStream)
                         val result = onSuccess(document)
-                        subject.sendMessage(result)
+                        subject.sendAndRecord(PlainText(result))
                     }
                 }
             } catch (exception: Throwable) {
                 exception.printStackTrace()
-                subject.sendMessage("请求错误！原因：${exception.message}")
+                subject.sendAndRecord(PlainText("请求错误！原因：${exception.message}"))
             }
         }
     }

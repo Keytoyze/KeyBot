@@ -2,14 +2,16 @@ package indi.key.keybot
 
 import com.google.gson.Gson
 import indi.key.keybot.math.CalculateCommand
-import indi.key.keybot.math.WolframAlphaApi
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.LowLevelAPI
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.data.MemberInfo
 import net.mamoe.mirai.message.MessageEvent
 import net.mamoe.mirai.message.MessageReceipt
-import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.message.data.Image
+import net.mamoe.mirai.message.data.Message
+import net.mamoe.mirai.message.data.MessageChain
+import net.mamoe.mirai.message.data.Voice
 import net.mamoe.mirai.utils.ExternalImage
 import java.io.File
 import java.io.InputStream

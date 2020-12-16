@@ -1,5 +1,6 @@
 package indi.key.keybot
 
+import indi.key.keybot.util.sendMessageSafely
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.message.MessageEvent
 

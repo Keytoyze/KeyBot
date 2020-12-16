@@ -11,6 +11,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "com.google.code.gson:gson:$gsonVersion"
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    compile "org.xerial:sqlite-jdbc:$sqliteVersion"
 }
 
 tasks.withType(Jar.class) { jarTask ->

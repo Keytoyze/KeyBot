@@ -2,16 +2,9 @@ package indi.key.keybot.math
 
 import indi.key.keybot.BaseCommand
 import indi.key.keybot.Environment
-import indi.key.keybot.sendMessageSafely
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.message.MessageEvent
-import okhttp3.*
-import okhttp3.HttpUrl.Companion.toHttpUrl
-import java.io.IOException
-import java.lang.StringBuilder
-import javax.xml.parsers.DocumentBuilderFactory
+import okhttp3.OkHttpClient
 
 
 object CalculateCommand : BaseCommand() {
