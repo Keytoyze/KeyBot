@@ -2,22 +2,17 @@ package indi.key.keybot.math
 
 import indi.key.keybot.BaseCommand
 import indi.key.keybot.Environment
+import indi.key.keybot.util.sendAndRecord
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.message.MessageEvent
-import okhttp3.OkHttpClient
+import net.mamoe.mirai.message.data.PlainText
 
 
 object CalculateCommand : BaseCommand() {
-    override val command: String
-        get() = "计算"
-    override val help: String
-        get() = "超强计算器，帮你计算、化简、求解、求导、积分！"
-    override val postFixHelp: String
-        get() = "[多元表达式/函数/方程/不等式]"
-
-    val client: OkHttpClient by lazy {
-        OkHttpClient()
-    }
+    override val command = "计算"
+    override val help = "超强计算器，帮你计算、化简、求解、求导、积分！"
+    override val postFixHelp = "[表达式/函数/方程/不等式]"
+    override val willUseEnvironment = false
 
     private val titleMap = mapOf(
         "Result" to "结果",
@@ -47,36 +42,43 @@ object CalculateCommand : BaseCommand() {
         environment: Environment,
         arguments: String
     ) {
-        WolframAlphaApi.process(arguments, messageEvent.subject) { document ->
-            val result = StringBuilder("输入：$arguments\n===================")
-            document.getElementsByTagName("pod").toIterable().forEach { pod ->
-                var title = pod.attributes.getNamedItem("title").textContent
-                if (title.endsWith('s')) {
-                    title = title.substring(0, title.length - 1)
-                }
-                println("title: $title -> ${titleMap[title]}")
-                titleMap[title]?.let { titleTranslate ->
-                    val items = pod.childNodes.toIterable()
-                        .map { subPod ->
-                            subPod.childNodes.toIterable()
-                                .firstOrNull { subpodElement -> subpodElement.nodeName == "plaintext" }
-                                ?.textContent
-                                ?.replace("element", "∈")
-                                ?.replace("log", "ln")
-                                ?.replace("integral", "∫")
-                                ?.replace("constant", "C")
-                                ?.replace("decimal digits", "位")
-                                ?.replace("(no roots exist)", "无解")
-                        }
-                        .filterNotNull()
-                        .filterNot { it.isBlank() }
-                    if (items.isNotEmpty()) {
-                        result.append("\n\uD83D\uDC49 ").append(titleTranslate).append("：")
-                        items.forEach { result.append("\n").append(it) }
+        val result = StringBuilder("输入：$arguments\n===================")
+        var hasResult = false
+        val timeStart = System.currentTimeMillis()
+        val document = WolframAlphaApi.process(arguments)
+        val timeUsed = System.currentTimeMillis() - timeStart
+        document.getElementsByTagName("pod").toIterable().forEach { pod ->
+            var title = pod.attributes.getNamedItem("title").textContent
+            if (title.endsWith('s')) {
+                title = title.substring(0, title.length - 1)
+            }
+            println("title: $title -> ${titleMap[title]}")
+            titleMap[title]?.let { titleTranslate ->
+                val items = pod.childNodes.toIterable()
+                    .map { subPod ->
+                        subPod.childNodes.toIterable()
+                            .firstOrNull { subpodElement -> subpodElement.nodeName == "plaintext" }
+                            ?.textContent
+                            ?.replace("element", "∈")
+                            ?.replace("log", "ln")
+                            ?.replace("integral", "∫")
+                            ?.replace("constant", "C")
+                            ?.replace("decimal digits", "位")
+                            ?.replace("(no roots exist)", "无解")
                     }
+                    .filterNotNull()
+                    .filterNot { it.isBlank() }
+                if (items.isNotEmpty()) {
+                    hasResult = true
+                    result.append("\n\uD83D\uDC49 ").append(titleTranslate).append("：")
+                    items.forEach { result.append("\n").append(it) }
                 }
             }
-            result.toString()
         }
+        if (!hasResult) {
+            result.append("\n诶，这个东西我也不会算 TAT")
+        }
+        result.append("\n（用时：%.2f 秒）".format(timeUsed.toDouble() / 1000))
+        messageEvent.subject.sendAndRecord(PlainText(result))
     }
 }

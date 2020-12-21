@@ -1,7 +1,7 @@
 package indi.key.keybot
 
 import com.google.gson.Gson
-import indi.key.keybot.math.CalculateCommand
+import indi.key.keybot.math.DrawCommand
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.LowLevelAPI
 import net.mamoe.mirai.contact.*
@@ -20,7 +20,8 @@ import kotlin.system.exitProcess
 
 suspend fun main() {
     Environment.userInfo = Gson().fromJson(File("KeyBot-repository/user.json").readText(), UserInfo::class.java)
-    CalculateCommand.process(DummyMessageEvent(), DummyGroup(), Environment(), "sin(x)^cos(x)")
+//    CalculateCommand.process(DummyMessageEvent(), DummyGroup(), Environment(), "sin(x)^cos(x)")
+    DrawCommand.process(DummyMessageEvent(), DummyGroup(), Environment(), "sin(x)^cos(x)")
 }
 
 class DummyContact : Contact() {
@@ -32,7 +33,7 @@ class DummyContact : Contact() {
         get() = TODO("Not yet implemented")
 
     override suspend fun sendMessage(message: Message): MessageReceipt<Contact> {
-        println("send message: \n${message}")
+        println("send message: \n${message.contentToString()}")
         println("send success!")
         exitProcess(0)
     }
