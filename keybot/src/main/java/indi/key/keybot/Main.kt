@@ -9,11 +9,11 @@ import net.mamoe.mirai.Bot
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
-import net.mamoe.mirai.event.subscribeFriendMessages
-import net.mamoe.mirai.event.subscribeGroupMessages
 import net.mamoe.mirai.event.subscribeMessages
 import net.mamoe.mirai.join
 import net.mamoe.mirai.message.MessageEvent
+import net.mamoe.mirai.message.data.At
+import net.mamoe.mirai.message.data.firstIsInstanceOrNull
 import java.io.File
 import java.util.*
 
@@ -78,50 +78,38 @@ suspend fun main() {
     val master = bot.groups.first { it.id == userInfo.masterGroup }
     println("[master] $master")
 
-    COMMANDS.forEach { command ->
-        val regex = Regex("(!|！)\\s*${command.command}\\s*(.*)\\s*")
-        bot.subscribeFriendMessages {
-            regex matching { content ->
-                val arguments = regex.matchEntire(content)!!.groupValues[2]
-                process(command, this, master, arguments)
-            }
-        }
-        bot.subscribeGroupMessages {
-            regex matching { content ->
-                val arguments = regex.matchEntire(content)!!.groupValues[2]
-                process(command, this, master, arguments)
-            }
-        }
-    }
-
-    bot.subscribeGroupMessages {
-        atBot {
-            process(HelpCommand, this, master, "")
-        }
-    }
-
     bot.subscribeMessages {
         always {
             println("[subject] ${subject}")
             println("[sender] ${sender}")
             println("[message] (${message.javaClass.name}) $message")
             println("[messageContent] (${message.javaClass.name}) ${message.contentToString()}")
-        }
 
-        always {
-            if (!this.message.contentToString().startsWith("!") &&
-                !this.message.contentToString().startsWith("！") &&
+            // save first
+            ChatRecorder.save(message, subject, sender.id)
+
+            val content = message.contentToString()
+
+            COMMANDS.forEach { command ->
+                val regex = Regex("(!|！)\\s*${command.command}\\s*(.*)\\s*")
+                if (regex.matches(content)) {
+                    val arguments = regex.matchEntire(content)!!.groupValues[2]
+                    process(command, this, master, arguments)
+                }
+            }
+
+            if (message.firstIsInstanceOrNull<At>()?.target == bot.id) {
+                process(HelpCommand, this, master, "")
+            }
+
+            if (!content.startsWith("!") &&
+                !content.startsWith("！") &&
                 this.sender.id != userInfo.qq
             ) {
                 process(ResponseFromLearnCommand, this, master, this.message.contentToString())
             }
         }
-
-        always {
-            ChatRecorder.save(message, subject, sender.id)
-        }
     }
-
     bot.join()
 }
 

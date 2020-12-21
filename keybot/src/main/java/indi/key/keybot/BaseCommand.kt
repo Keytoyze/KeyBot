@@ -2,6 +2,7 @@ package indi.key.keybot
 
 import indi.key.keybot.learn.ForgetCommand
 import indi.key.keybot.learn.LearnCommand
+import indi.key.keybot.learn.RepeatCommand
 import indi.key.keybot.math.CalculateCommand
 import indi.key.keybot.question.AnswerCommand
 import indi.key.keybot.question.RequestCommand
@@ -33,6 +34,7 @@ val COMMANDS = listOf(
     CalculateCommand,
     LearnCommand,
     ForgetCommand,
+    RepeatCommand,
     PingCommand,
     HelpCommand
 )
