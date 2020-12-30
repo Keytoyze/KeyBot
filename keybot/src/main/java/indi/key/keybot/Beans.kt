@@ -1,13 +1,11 @@
 package indi.key.keybot
 
-import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import net.mamoe.mirai.contact.Member
 import net.mamoe.mirai.contact.User
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.MessageContent
 import net.mamoe.mirai.message.data.PlainText
-import java.io.File
 
 @Suppress("UNCHECKED_CAST")
 data class Environment(
@@ -17,6 +15,8 @@ data class Environment(
     var currentErrorCount: Int? = 0,
 
     var learnMap: HashMap<String, String>? = hashMapOf(),
+
+    var faultCountMap: HashMap<Long, Int>? = hashMapOf(),
 
     var lastSendTime: Long? = null,
     var abandonInterval: Long? = null

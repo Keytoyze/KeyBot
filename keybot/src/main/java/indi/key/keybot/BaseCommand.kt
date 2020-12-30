@@ -1,5 +1,8 @@
 package indi.key.keybot
 
+import indi.key.keybot.count.DecreaseFaultCommand
+import indi.key.keybot.count.IncreaseFaultCommand
+import indi.key.keybot.count.ViewFaultCommand
 import indi.key.keybot.learn.ForgetCommand
 import indi.key.keybot.learn.LearnCommand
 import indi.key.keybot.learn.RepeatCommand
@@ -37,6 +40,9 @@ val COMMANDS = listOf(
     LearnCommand,
     ForgetCommand,
     RepeatCommand,
+    IncreaseFaultCommand,
+    DecreaseFaultCommand,
+    ViewFaultCommand,
     PingCommand,
     HelpCommand
 )
